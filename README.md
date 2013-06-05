@@ -17,8 +17,6 @@ and run the `php composer.phar install --dev` command to install it:
 ## Example
 
 ~~~php
-<?php
-
 require_once 'vendor/autoload.php';
 
 use NyanCat\Cat;
@@ -26,29 +24,28 @@ use NyanCat\Rainbow;
 use NyanCat\Team;
 use NyanCat\Scoreboard;
 
-use Fab\Factory as FabFactory;
+use Fab\SuperFab;
 
-$writer = function($string) {
-    echo $string;
-};
-
-$fab = FabFactory::getFab(isset($_SERVER['TERM']) ? $_SERVER['TERM'] : 'unknown');
-$cat = new Cat();
-$rainbow = new Rainbow($fab);
-$teams = array(
-    new Team('pass', 'green', '^'),
-    new Team('fail', 'red', 'o'),
-    new Team('pending', 'cyan', '-'),
+$scoreboard = new Scoreboard(
+    function ($string) {
+        echo $string;
+    },
+    new Cat(),
+    new Rainbow(
+        new SuperFab()
+    ),
+    array(
+        new Team('pass', 'green', '^'),
+        new Team('fail', 'red', 'o'),
+        new Team('pending', 'cyan', '-'),
+    )
 );
 
-$scoreboard = new Scoreboard($writer, $cat, $rainbow, $teams);
 $scoreboard->start();
-
 for($i = 0; $i <= 200; $i++) {
     usleep(90000);
     $scoreboard->score('pass');
 }
-
 $scoreboard->end();
 ~~~
 
