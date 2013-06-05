@@ -8,11 +8,13 @@ The recommended way to install the Nyan Cat Scoreboard is
 [through composer](http://getcomposer.org). Just create a `composer.json` file
 and run the `php composer.phar install --dev` command to install it:
 
-    {
-        "require": {
-            "whatthejeff/nyancat-scoreboard": "1.0.*@dev"
-        }
+~~~json
+{
+    "require": {
+        "whatthejeff/nyancat-scoreboard": "1.0.*@dev"
     }
+}
+~~~
 
 ## Example
 
