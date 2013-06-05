@@ -12,22 +12,106 @@
 namespace NyanCat;
 
 /**
+ * The scoreboard where everything is assembled.
  *
+ * Example:
+ *
+ *     use NyanCat\Cat;
+ *     use NyanCat\Rainbow;
+ *     use NyanCat\Team;
+ *     use NyanCat\Scoreboard;
+ *
+ *     use Fab\SuperFab;
+ *
+ *     $scoreboard = new Scoreboard(
+ *         function ($string) {
+ *             echo $string;
+ *         },
+ *         new Cat(),
+ *         new Rainbow(
+ *             new SuperFab()
+ *         ),
+ *         array(
+ *             new Team('pass', 'green', '^'),
+ *             new Team('fail', 'red', 'o'),
+ *             new Team('pending', 'cyan', '-'),
+ *         )
+ *     );
+ *
+ *     $scoreboard->start();
+ *     for($i = 0; $i <= 200; $i++) {
+ *         usleep(90000);
+ *         $scoreboard->score('pass');
+ *     }
+ *     $scoreboard->end();
  *
  * @author Jeff Welch <whatthejeff@gmail.com>
  */
 class Scoreboard
 {
+    /**
+     * Ansi escape
+     */
     const ESC = "\x1b[";
+    /**
+     * Ansi Normal
+     */
     const NND = "\x1b[0m";
 
-    private $position = 0;
+    /**
+     * Width in characters of the scores section on the scoreboard.
+     *
+     * @var integer
+     */
     private $width;
+    /**
+     * Height in newlines of the tallest element on the scoreboard.
+     *
+     * NOTE: This is set automatically.
+     *
+     * @var integer
+     */
     private $height;
 
-    private $cats;
+    /**
+     * A callable that takes a string and writes it to the appropriate output
+     * source. For example:
+     *
+     *     function ($string) {
+     *         echo $string;
+     *     }
+     *
+     * @var callable
+     */
+    private $writer;
+    /**
+     * The animated ASCII cat.
+     *
+     * @var NyanCat\Cat
+     */
+    private $cat;
+    /**
+     * The animated ASCII rainbow.
+     *
+     * @var NyanCat\Cat
+     */
     private $rainbow;
+    /**
+     * A collection of teams to track on the scoreboard.
+     *
+     * @var array
+     */
+    private $teams;
 
+    /**
+     * Initializes the scoreboard.
+     *
+     * @param callable $writer     A callable that takes a string and writes it to the appropriate output source.
+     * @param Fab\Cat $cat         The animated ASCII cat.
+     * @param Fab\Rainbow $rainbow The animated ASCII cat.
+     * @param array $teams         A collection of teams to track on the scoreboard.
+     * @param integer $width       Width in characters of the scores section on the scoreboard.
+     */
     public function __construct($writer, Cat $cat, Rainbow $rainbow, array $teams = array(), $width = 5)
     {
         $this->cat = $cat;
@@ -39,61 +123,21 @@ class Scoreboard
         $this->setHeight();
     }
 
-    private function setHeight()
-    {
-        $this->height = max(
-            count($this->teams),
-            $this->rainbow->getHeight(),
-            $this->cat->getHeight()
-        );
-    }
-
-    private function setTeams(array $teams)
-    {
-        if (empty($teams)) {
-            throw new \InvalidArgumentException(
-                'You must provide at least one team'
-            );
-        }
-
-        foreach ($teams as $team) {
-            if (!$team instanceof Team) {
-                throw new \InvalidArgumentException(
-                    'All teams must be an instance of NyanCat\\Team'
-                );
-            }
-
-            $this->teams[$team->getName()] = $team;
-        }
-    }
-
-    private function setWriter($writer)
-    {
-        if (!is_callable($writer)) {
-            throw new \InvalidArgumentException(
-                'Writer must be callable'
-            );
-        }
-
-        $this->writer = $writer;
-    }
-
-    private function setWidth($width)
-    {
-        if (!is_int($width) || $width < 1) {
-            throw new \InvalidArgumentException(
-                'Width must be a positive interger'
-            );
-        }
-
-        $this->width = $width;
-    }
-
+    /**
+     * Writes out the initial scoreboard.
+     */
     public function start()
     {
         $this->score('start');
     }
 
+    /**
+     * Updates the score for a team and makes another iteration in the
+     * scoreboard animation.
+     *
+     * @param string $team    The name of the team
+     * @param integer $points The number of points to add to the team's score.
+     */
     public function score($team, $points = 1)
     {
         if (isset($this->teams[$team])) {
@@ -105,24 +149,49 @@ class Scoreboard
         $this->drawCat($team);
     }
 
+    /**
+     * Moves the cursor below the scoreboard to end the scoreboard animation.
+     */
     public function end()
     {
         $this->writeLines($this->height);
     }
 
-    public function getPreamble($size)
+    /**
+     * Gets the number of newlines from the top that it will take to place the
+     * current element in the middle of the scoreboard.
+     *
+     * @param integer $size The size of the current element.
+     *
+     * @return integer the number of newlines from the top.
+     */
+    protected function getPreamble($size)
     {
         $height_diff = $this->height - $size;
         return $height_diff > 0 ? floor($height_diff / 2) : 0;
     }
 
-    public function getPostamble($size)
+    /**
+     * Gets the number of newlines from the end that it will take to place the
+     * current element in the middle of the scoreboard.
+     *
+     * @param integer $size The size of the current element.
+     *
+     * @return integer the number of newlines from the bottom.
+     */
+    protected function getPostamble($size)
     {
         $height_diff = $this->height - $size;
         return $height_diff > 0 ? $height_diff - floor($height_diff / 2) : 0;
     }
 
-    public function preamble($size)
+    /**
+     * Prints newlines from the top to place the current element in the middle
+     * of the scoreboard.
+     *
+     * @param integer $size The size of the current element.
+     */
+    protected function preamble($size)
     {
         $preamble = $this->getPreamble($size);
         if ($preamble > 0) {
@@ -130,7 +199,13 @@ class Scoreboard
         }
     }
 
-    public function postamble($size)
+    /**
+     * Prints newlines from the bottom to place the current element in the
+     * middle of the scoreboard.
+     *
+     * @param integer $size The size of the current element.
+     */
+    protected function postamble($size)
     {
         $postamble = $this->getPostamble($size);
         if ($postamble > 0) {
@@ -140,26 +215,44 @@ class Scoreboard
         $this->resetCursor();
     }
 
+    /**
+     * Moves the cursor up a number of lines.
+     *
+     * @param integer $lines The number of lines to move the cursor up.
+     */
     protected function cursorUp($lines)
     {
         $this->write(self::ESC . $lines . 'A');
     }
 
+    /**
+     * Moves the cursor up to the top of the scoreboard.
+     */
     protected function resetCursor()
     {
         $this->cursorUp($this->height);
     }
 
-    protected function writeLines($size)
+    /**
+     * Moves the cursor down a number of lines.
+     *
+     * @param integer $lines The number of lines to move the cursor down.
+     */
+    protected function writeLines($lines)
     {
-        if ($size > 0) {
-            $this->write(str_repeat(" \n", $size));
+        if ($lines > 0) {
+            $this->write(str_repeat(" \n", $lines));
         }
     }
 
+    /**
+     * Writes out a string using the current writer.
+     *
+     * @param string $string The string to write out.
+     */
     protected function write($string)
     {
-        return call_user_func($this->writer, $string);
+        call_user_func($this->writer, $string);
     }
 
     /**
@@ -184,6 +277,9 @@ class Scoreboard
         $this->postamble($size);
     }
 
+    /**
+     * Draws the rainbow for the current iteration.
+     */
     protected function drawRainbow()
     {
         $rainbow = $this->rainbow->next();
@@ -215,10 +311,15 @@ class Scoreboard
 
     }
 
-    protected function drawCat($status)
+    /**
+     * Draws the cat for the current iteration.
+     *
+     * @param string $team The name of the team that has scored for this iteration.
+     */
+    protected function drawCat($team)
     {
         $cat = $this->cat->next(
-            isset($this->teams[$status]) ? $this->teams[$status]->getEye() : '-'
+            isset($this->teams[$team]) ? $this->teams[$team]->getEye() : '-'
         );
 
         $width = $this->width + $this->rainbow->getWidth();
@@ -233,5 +334,83 @@ class Scoreboard
         }
 
         $this->postamble($size);
+    }
+
+    /**
+     * Sets the teams to track on the scoreboard.
+     *
+     * @param array $teams the teams to track on the scoreboard.
+     *
+     * @throws \InvalidArgumentException When invalid or no teams are provided.
+     */
+    private function setTeams(array $teams)
+    {
+        if (empty($teams)) {
+            throw new \InvalidArgumentException(
+                'You must provide at least one team'
+            );
+        }
+
+        foreach ($teams as $team) {
+            if (!$team instanceof Team) {
+                throw new \InvalidArgumentException(
+                    'All teams must be an instance of NyanCat\\Team'
+                );
+            }
+
+            $this->teams[$team->getName()] = $team;
+        }
+    }
+
+    /**
+     * Sets the callable that writes out the scoreboard. For example:
+     *
+     *     function ($string) {
+     *         echo $string;
+     *     }
+     *
+     * @param callable $writer the callable that writes out the scoreboard.
+     *
+     * @throws \InvalidArgumentException When $writer is not callable.
+     */
+    private function setWriter($writer)
+    {
+        if (!is_callable($writer)) {
+            throw new \InvalidArgumentException(
+                'Writer must be callable'
+            );
+        }
+
+        $this->writer = $writer;
+    }
+
+    /**
+     * Sets the width in characters of the scores section on the scoreboard.
+     *
+     * @param integer $width the width in characters.
+     *
+     * @throws \InvalidArgumentException When $width is not a positive integer.
+     */
+    private function setWidth($width)
+    {
+        if (!is_int($width) || $width < 1) {
+            throw new \InvalidArgumentException(
+                'Width must be a positive interger'
+            );
+        }
+
+        $this->width = $width;
+    }
+
+    /**
+     * Sets the height in newlines of the tallest element on the scoreboard.
+     */
+    private function setHeight()
+    {
+        $this->height = max(
+            count($this->teams),
+            $this->rainbow->getHeight(),
+            $this->cat->getHeight()
+        );
     }
 }

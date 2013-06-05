@@ -42,7 +42,7 @@ $scoreboard = new Scoreboard(
 );
 
 $scoreboard->start();
-for($i = 0; $i <= 200; $i++) {
+for ($i = 0; $i <= 200; $i++) {
     usleep(90000);
     $scoreboard->score('pass');
 }

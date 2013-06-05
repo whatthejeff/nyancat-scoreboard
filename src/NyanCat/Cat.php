@@ -32,7 +32,9 @@ class Cat
      * An array of ASCII cat states.
      *
      * Each state should be the array you'd get after running the following on
-     * an ASCII cat: `implode("\n", $ascii_state);`.
+     * an ASCII cat:
+     *
+     *     implode("\n", $ascii_state);
      *
      * Use percents (%) for eyes so they can be replaced at certain states to
      * indicate cat emotions.
@@ -83,7 +85,8 @@ class Cat
      *
      * If you wish to specify a custom ASCII cat, each state should be the
      * array you'd get after running the following on an ASCII cat:
-     * `implode("\n", $ascii_state);`.
+     *
+     *     implode("\n", $ascii_state);
      *
      * Use percents (%) for eyes so they can be replaced at certain states to
      * indicate cat emotions.
