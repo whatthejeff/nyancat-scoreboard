@@ -169,13 +169,13 @@ class Cat
                 );
             }
 
-            if(count($state) !== $height) {
+            if (count($state) !== $height) {
                 throw new \InvalidArgumentException(
                     'Height must be the same for all states'
                 );
             }
 
-            foreach($state as $line) {
+            foreach ($state as $line) {
                 if (!is_string($line)) {
                     throw new \InvalidArgumentException(
                         'States must be an array of strings'
