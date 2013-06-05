@@ -1,0 +1,30 @@
+{
+    "name": "whatthejeff/nyancat-scoreboard",
+    "description": "Nyan Cat Scoreboard",
+    "keywords": ["nyan","cat","rainbow","scoreboard","tests"],
+    "homepage": "http://github.com/whatthejeff/nyancat-scoreboard",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jeff Welch",
+            "email": "whatthejeff@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "whatthejeff/fab": "~1.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~3.7"
+    },
+    "autoload": {
+        "psr-0": {
+            "NyanCat": "src/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        }
+    }
+}
