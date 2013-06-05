@@ -48,6 +48,8 @@ $scoreboard->end();
 
 ## Tests
 
+[![Build Status](https://travis-ci.org/whatthejeff/nyancat-scoreboard.png?branch=master)](https://travis-ci.org/whatthejeff/nyancat-scoreboard)
+
 To run the test suite, you need [composer](http://getcomposer.org).
 
     $ php composer.phar install --dev
