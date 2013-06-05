@@ -28,11 +28,114 @@ class RainbowTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('InvalidArgumentException', $message);
 
-        new Rainbow(
-            $this->getMock('Fab\SuperFab'),
-            $states,
-            $maxWidth,
-            $height
+        new Rainbow($this->getFab(), $states, $maxWidth, $height);
+    }
+
+    /**
+     * @dataProvider heightProvider
+     */
+    public function testHeight($rainbow, $height)
+    {
+        $this->assertEquals($height, $rainbow->getHeight());
+    }
+
+    /**
+     * @dataProvider widthProvider
+     */
+    public function testWidth($rainbow, $width)
+    {
+        $rainbow->next();
+        $this->assertEquals(1, $rainbow->getWidth());
+
+        $rainbow->next();
+        $this->assertEquals(2, $rainbow->getWidth());
+
+        for ($i = 0; $i <= $width; $i++) {
+            $rainbow->next();
+        }
+
+        $rainbow->next();
+        $this->assertEquals($width, $rainbow->getWidth());
+
+        $rainbow->next();
+        $this->assertEquals($width, $rainbow->getWidth());
+    }
+
+    public function testDefaultRainbow()
+    {
+        $rainbow = new Rainbow($this->getFab());
+
+        $expected = array_fill(0, 4, array('-'));
+        $this->assertEquals($expected, $rainbow->next());
+
+        $expected = array_fill(0, 4, array('-','_'));
+        $this->assertEquals($expected, $rainbow->next());
+
+        $expected = array_fill(0, 4, array('-','_','-'));
+        $this->assertEquals($expected, $rainbow->next());
+
+        $expected = array_fill(0, 4, array('-','_','-','_'));
+        $this->assertEquals($expected, $rainbow->next());
+    }
+
+    public function testCustomRainbow()
+    {
+        $rainbow = new Rainbow($this->getFab(), array('*','-','+','/'), 64, 10);
+
+        $expected = array_fill(0, 10, array('*'));
+        $this->assertEquals($expected, $rainbow->next());
+
+        $expected = array_fill(0, 10, array('*','-'));
+        $this->assertEquals($expected, $rainbow->next());
+
+        $expected = array_fill(0, 10, array('*','-','+'));
+        $this->assertEquals($expected, $rainbow->next());
+
+        $expected = array_fill(0, 10, array('*','-','+','/'));
+        $this->assertEquals($expected, $rainbow->next());
+
+        $expected = array_fill(0, 10, array('*','-','+','/','*'));
+        $this->assertEquals($expected, $rainbow->next());
+    }
+
+    public function getExpectedRainbow($rainbow, $char)
+    {
+        foreach ($rainbow as &$line) {
+            $line[] = $char;
+        }
+
+        return $rainbow;
+    }
+
+    public function heightProvider()
+    {
+        $fab = $this->getFab();
+
+        return array(
+            array(
+                new Rainbow($fab),
+                4
+            ),
+            array(
+                new Rainbow($fab, array('-', '_'), 64, 10),
+                10
+            ),
+        );
+    }
+
+    public function widthProvider()
+    {
+        $fab = $this->getFab();
+
+        return array(
+            array(
+                new Rainbow($fab),
+                64
+            ),
+            array(
+                new Rainbow($fab, array('-', '_'), 100),
+                100
+            ),
         );
     }
 
@@ -64,5 +167,19 @@ class RainbowTest extends \PHPUnit_Framework_TestCase
                 'Height must be a positive integer'
             ),
         );
+    }
+
+    protected function getFab()
+    {
+        $fab = $this->getMock('Fab\SuperFab');
+        $fab->expects($this->any())
+            ->method('paint')
+            ->will(
+                $this->returnCallback(function ($string) {
+                    return $string;
+                })
+            );
+
+        return $fab;
     }
 }
