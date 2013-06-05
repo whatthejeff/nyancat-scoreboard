@@ -104,7 +104,7 @@ class Scoreboard
      * Initializes the scoreboard.
      *
      * @param Fab\Cat $cat         The animated ASCII cat.
-     * @param Fab\Rainbow $rainbow The animated ASCII cat.
+     * @param Fab\Rainbow $rainbow The animated ASCII rainbow.
      * @param array $teams         A collection of teams to track on the scoreboard.
      * @param integer $width       Width in characters of the scores section on the scoreboard.
      * @param callable $writer     A callable that takes a string and writes it to the appropriate output source.
