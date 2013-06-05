@@ -27,9 +27,6 @@ use NyanCat\Scoreboard;
 use Fab\SuperFab;
 
 $scoreboard = new Scoreboard(
-    function ($string) {
-        echo $string;
-    },
     new Cat(),
     new Rainbow(
         new SuperFab()

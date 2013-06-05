@@ -24,9 +24,6 @@ namespace NyanCat;
  *     use Fab\SuperFab;
  *
  *     $scoreboard = new Scoreboard(
- *         function ($string) {
- *             echo $string;
- *         },
  *         new Cat(),
  *         new Rainbow(
  *             new SuperFab()
@@ -78,7 +75,7 @@ class Scoreboard
      * source. For example:
      *
      *     function ($string) {
-     *         echo $string;
+     *         print $string;
      *     }
      *
      * @var callable
@@ -106,21 +103,22 @@ class Scoreboard
     /**
      * Initializes the scoreboard.
      *
-     * @param callable $writer     A callable that takes a string and writes it to the appropriate output source.
      * @param Fab\Cat $cat         The animated ASCII cat.
      * @param Fab\Rainbow $rainbow The animated ASCII cat.
      * @param array $teams         A collection of teams to track on the scoreboard.
      * @param integer $width       Width in characters of the scores section on the scoreboard.
+     * @param callable $writer     A callable that takes a string and writes it to the appropriate output source.
      */
-    public function __construct($writer, Cat $cat, Rainbow $rainbow, array $teams = array(), $width = 5)
+    public function __construct(Cat $cat, Rainbow $rainbow, array $teams, $width = 5, $writer = null)
     {
         $this->cat = $cat;
         $this->rainbow = $rainbow;
 
         $this->setTeams($teams);
-        $this->setWriter($writer);
         $this->setWidth($width);
         $this->setHeight();
+
+        $this->setWriter($writer);
     }
 
     /**
@@ -366,15 +364,21 @@ class Scoreboard
      * Sets the callable that writes out the scoreboard. For example:
      *
      *     function ($string) {
-     *         echo $string;
+     *         print $string;
      *     }
      *
      * @param callable $writer the callable that writes out the scoreboard.
      *
      * @throws \InvalidArgumentException When $writer is not callable.
      */
-    private function setWriter($writer)
+    private function setWriter($writer = null)
     {
+        if ($writer === null) {
+            $writer = function ($string) {
+                print $string;
+            };
+        }
+
         if (!is_callable($writer)) {
             throw new \InvalidArgumentException(
                 'Writer must be callable'
