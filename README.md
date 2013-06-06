@@ -1,3 +1,5 @@
+[![Nyan Cat Scoreboard](https://github.com/whatthejeff/nyancat-scoreboard/raw/master/examples.png)](https://github.com/whatthejeff/nyancat-scoreboard/raw/master/examples.png)
+
 ## Requirements
 
 The Nyan Cat Scoreboard works with PHP 5.3.3 or later.
