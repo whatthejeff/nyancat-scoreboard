@@ -30,13 +30,44 @@ class ScoreboardTest extends \PHPUnit_Framework_TestCase
         new Scoreboard($cat, $rainbow, $teams, $width, $writer);
     }
 
+    /**
+     * @dataProvider scoreboardProvider
+     */
+    public function testRunning($scoreboard)
+    {
+        $this->assertFalse($scoreboard->isRunning());
+
+        $scoreboard->start();
+        $this->assertTrue($scoreboard->isRunning());
+
+        $scoreboard->end();
+        $this->assertFalse($scoreboard->isRunning());
+    }
+
+    public function scoreboardProvider()
+    {
+        return array(
+            array(
+                new Scoreboard(
+                    $this->getCat(),
+                    $this->getRainbow(),
+                    array(
+                        $this->getTeam()
+                    ),
+                    5,
+                    function ($string) {
+                    }
+                )
+            )
+        );
+    }
+
     public function invalidScoreboardProvider()
     {
         $cat = $this->getCat();
         $rainbow = $this->getRainbow();
         $team = $this->getTeam();
         $writer = function ($string) {
-            return $string;
         };
 
         return array(
@@ -65,16 +96,28 @@ class ScoreboardTest extends \PHPUnit_Framework_TestCase
 
     protected function getCat()
     {
-        return $this->getMockBuilder('NyanCat\Cat')
+        $cat = $this->getMockBuilder('NyanCat\Cat')
             ->disableOriginalConstructor()
             ->getMock();
+
+        $cat->expects($this->any())
+            ->method('next')
+            ->will($this->returnValue(array()));
+
+        return $cat;
     }
 
     protected function getRainbow()
     {
-        return $this->getMockBuilder('NyanCat\Rainbow')
+        $rainbow = $this->getMockBuilder('NyanCat\Rainbow')
             ->disableOriginalConstructor()
             ->getMock();
+
+        $rainbow->expects($this->any())
+            ->method('next')
+            ->will($this->returnValue(array()));
+
+        return $rainbow;
     }
 
     protected function getTeam()

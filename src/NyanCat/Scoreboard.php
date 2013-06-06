@@ -56,6 +56,13 @@ class Scoreboard
     const NND = "\x1b[0m";
 
     /**
+     * If a scoreboard is currently running.
+     *
+     * @var boolean
+     */
+    private $running = false;
+
+    /**
      * Width in characters of the scores section on the scoreboard.
      *
      * @var integer
@@ -126,6 +133,7 @@ class Scoreboard
      */
     public function start()
     {
+        $this->running = true;
         $this->score('start');
     }
 
@@ -152,7 +160,18 @@ class Scoreboard
      */
     public function end()
     {
+        $this->running = false;
         $this->writeLines($this->height);
+    }
+
+    /**
+     * Checks if a scoreboard is currently running.
+     *
+     * @return boolean if a scoreboard is running.
+     */
+    public function isRunning()
+    {
+        return $this->running;
     }
 
     /**
