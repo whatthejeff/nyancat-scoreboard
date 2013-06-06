@@ -1,5 +1,5 @@
-Nyan Cat Scoreboard 1.1.0
-=========================
+Nyan Cat Scoreboard 1.1
+=======================
 
 This is the list of changes for the Nyan Cat Scoreboard 1.1 release series.
 

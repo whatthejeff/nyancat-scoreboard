@@ -13,7 +13,7 @@ and run the `php composer.phar install --dev` command to install it:
 ~~~json
 {
     "require": {
-        "whatthejeff/nyancat-scoreboard": "1.0.*@dev"
+        "whatthejeff/nyancat-scoreboard": "~1.1"
     }
 }
 ~~~
