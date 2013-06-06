@@ -14,6 +14,7 @@
     <testsuites>
         <testsuite name="Nyan Cat Scoreboard Test Suite">
             <directory suffix=".php">./tests/NyanCat/</directory>
+            <directory suffix=".phpt">./tests/Integration/</directory>
         </testsuite>
     </testsuites>
     <filter>

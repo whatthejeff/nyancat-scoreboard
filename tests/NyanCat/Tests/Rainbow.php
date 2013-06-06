@@ -98,15 +98,6 @@ class RainbowTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $rainbow->next());
     }
 
-    public function getExpectedRainbow($rainbow, $char)
-    {
-        foreach ($rainbow as &$line) {
-            $line[] = $char;
-        }
-
-        return $rainbow;
-    }
-
     public function heightProvider()
     {
         $fab = $this->getFab();
@@ -171,7 +162,10 @@ class RainbowTest extends \PHPUnit_Framework_TestCase
 
     protected function getFab()
     {
-        $fab = $this->getMock('Fab\SuperFab');
+        $fab = $this->getMockBuilder('Fab\SuperFab')
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $fab->expects($this->any())
             ->method('paint')
             ->will(
