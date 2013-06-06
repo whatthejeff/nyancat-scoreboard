@@ -8,7 +8,7 @@ The Nyan Cat Scoreboard works with PHP 5.3.3 or later.
 
 The recommended way to install the Nyan Cat Scoreboard is
 [through composer](http://getcomposer.org). Just create a `composer.json` file
-and run the `php composer.phar install --dev` command to install it:
+and run the `php composer.phar install` command to install it:
 
 ~~~json
 {
