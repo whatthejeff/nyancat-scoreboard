@@ -40,7 +40,7 @@ namespace NyanCat;
  *         usleep(90000);
  *         $scoreboard->score('pass');
  *     }
- *     $scoreboard->end();
+ *     $scoreboard->stop();
  *
  * @author Jeff Welch <whatthejeff@gmail.com>
  */
@@ -158,7 +158,7 @@ class Scoreboard
     /**
      * Moves the cursor below the scoreboard to end the scoreboard animation.
      */
-    public function end()
+    public function stop()
     {
         $this->running = false;
         $this->writeLines($this->height);

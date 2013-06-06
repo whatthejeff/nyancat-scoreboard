@@ -57,7 +57,7 @@ for($i = 0; $i <= 2; $i++) {
     $scoreboard->score('fail');
     $scoreboard->score('pending');
 }
-$scoreboard->end();
+$scoreboard->stop();
 
 --EXPECT--
  

@@ -14,7 +14,7 @@ $scoreboard = new Scoreboard(
     new Rainbow(
         FabFactory::getFab(
             empty($_SERVER['TERM']) ? 'unknown' : $_SERVER['TERM']
-        ), 
+        ),
         array('+','-'), 64, 10
     ),
     array(
@@ -29,4 +29,4 @@ for($i = 0; $i < 100; $i++) {
     usleep(90000);
     $scoreboard->score('pass');
 }
-$scoreboard->end();
+$scoreboard->stop();

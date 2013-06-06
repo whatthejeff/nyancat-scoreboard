@@ -40,7 +40,7 @@ class ScoreboardTest extends \PHPUnit_Framework_TestCase
         $scoreboard->start();
         $this->assertTrue($scoreboard->isRunning());
 
-        $scoreboard->end();
+        $scoreboard->stop();
         $this->assertFalse($scoreboard->isRunning());
     }
 

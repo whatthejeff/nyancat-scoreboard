@@ -55,4 +55,4 @@ for($i = 0; $i < 100; $i++) {
     usleep(90000);
     $scoreboard->score('pass');
 }
-$scoreboard->end();
+$scoreboard->stop();

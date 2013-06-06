@@ -47,7 +47,7 @@ for ($i = 0; $i <= 200; $i++) {
     usleep(90000);
     $scoreboard->score('pass');
 }
-$scoreboard->end();
+$scoreboard->stop();
 ~~~
 
 ## Tests
