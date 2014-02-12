@@ -70,11 +70,11 @@ class Rainbow
      */
     public function __construct(Fab $fab, array $states = array('-', '_'), $maxWidth = 64, $height = 4)
     {
-				if(substr(PHP_OS, 0, 3) === 'WIN') {
-						//Decrease the maxWidth by one to compensate for how windows handles column counts.
-						$maxWidth--;
-				}
-				  
+        // Windows includes the cursor in the width calculation
+        if (0 === strpos(strtolower(PHP_OS), 'win')) {
+            $maxWidth--;
+        }
+
         $this->fab = $fab;
 
         $this->setStates($states);
