@@ -2,7 +2,18 @@
 
 ## Requirements
 
-The Nyan Cat Scoreboard works with PHP 5.3.3 or later.
+The Nyan Cat scoreboard requires:
+
+ * PHP 5.3.3 or later.
+ * A terminal emulator with support for ANSI escape sequences, including color
+   and cursor control.
+
+**NOTE:** By default, the Windows console does not support ANSI escape
+sequences. If you'd like to use the Nyan Cat scoreboard on Windows, you
+may want to try one of the following solutions:
+
+ * [ANSICON](https://github.com/adoxa/ansicon)
+ * [ConEmu](https://github.com/Maximus5/ConEmu)
 
 ## Installation
 
